@@ -9,6 +9,6 @@ da Faculdade de Engenharia da Universidade do Porto (FEUP)
 ### Vídeo Robô
 Link: https://www.youtube.com/watch?v=z3xoWZHSy9g
 
-### Trabalho realizado por:\
+### Trabalho realizado por:
 Jorge Ribeiro\
 José Carvalho
