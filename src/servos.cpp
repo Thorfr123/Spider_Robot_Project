@@ -257,7 +257,7 @@ void update_angle(int servoID, int angle, int servoPIN) {
 
 }
 
-// Reset servo angle (NEED TO BE CHANGED LATER)
+// Reset servo angle
 void reset_angle(int servoID, int servoPIN) {
 
   servoID--;
