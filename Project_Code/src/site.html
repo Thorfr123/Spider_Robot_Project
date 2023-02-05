@@ -1,0 +1,544 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:,">
+    <title>Robot Commands</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial;
+            text-align: center;
+        }
+
+        .tablink {
+            background-color: #555;
+            color: white;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 12px;
+            font-size: 13px;
+            text-align: center;
+            width: 25%;
+        }
+        .tablink:hover {
+            background-color: #777;
+        }
+        
+        .tabcontent {
+            color: white;
+            display: none;
+            padding: 100px 20px;
+            height: 100%;
+        }
+
+        #Comandos {
+            background-color: red;
+        }
+        #Manual {
+            background-color: green;
+        }
+        #Calibracao {
+            background-color: blue;
+        }
+        #Parametros {
+            background-color: orange;
+        }
+
+		.btn {
+        	background-color: #ddd;
+            color: black;
+            width:80%;
+            font-size: 16px;
+            text-align: center;
+  			border: none;
+            padding: 10px 32px;
+            margin: 4px 2px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .btn:hover:enabled {
+            background-color: #3e8e41;
+            color: white;
+		}
+        .btn:disabled {
+        	background-color: #202020;
+            color: white;
+            cursor: default;
+        }
+        
+        #submit {
+        	margin: 20px 8px;
+        	width: 75%;
+        }
+        #parar {
+        	width: 90%;
+        }
+
+		.ajuste {
+        	width: 80%;
+        }
+
+        .row {
+            display: flex;
+        }
+
+        .column {
+            flex: 50%;
+        }
+        
+        .slider {
+        	-webkit-appearance: none;
+            appearance: none;
+            width: 80%;
+            height: 20px;
+            border-radius: 15px;
+            background-color: #FFF;
+            outline: none;
+            opacity: .7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+        .slider:hover {
+      		opacity: .9;
+        }
+        .slider::-webkit-slider-thumb {
+        	-webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #ff3410;
+            cursor: pointer; 
+        }
+    </style>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+	<header>
+        <button class="tablink" onclick="openPage('Comandos', this,'red')" id="defaultOpen">
+            Comandos
+        </button>
+
+        <button class="tablink" onclick="openPage('Manual', this, 'green')">
+            Manual
+        </button>
+
+        <button class="tablink" onclick="openPage('Calibracao', this, 'blue')">
+            Calibração
+        </button>
+
+        <button class="tablink" onclick="openPage('Parametros', this, 'orange')">
+            Parâmetros
+        </button>
+	</header>
+
+    <div id="Comandos" class="tabcontent">
+        <h2>Comandos</h2>
+        
+        <div class="row">
+        	<div class="column">
+            	<button id="andarFrente1" class="btn" onclick="sendInfo('w1')">
+                	Andar para a frente: Método 1
+                </button>
+                
+                <button id="rodar1" class="btn" onclick="sendInfo('r1')">
+                	Rodar: Esquerda
+                </button>
+                
+                <button id="equiv" class="btn" onclick="sendInfo('eq')">
+                	Equilíbrio
+                </button>
+
+                <button id="obst1" class="btn" onclick="sendInfo('ob1')">
+                	Andar para a frente: Obstaculo
+                </button>
+           </div>
+           
+           <div class="column">
+           		<button id="andarFrente2" class="btn" onclick="sendInfo('w2')">
+                	Andar para a frente: Método 2 
+                </button>
+                
+                <button id="rodar2" class="btn" onclick="sendInfo('r2')">
+                	Rodar: Direita
+                </button>
+
+                <button id="danc1" class="btn" onclick="sendInfo('d1')">
+                	Dançar: Método 1
+                </button>
+
+                <button id="obst2" class="btn" onclick="sendInfo('ob2')">
+                	Andar para a frente: Obstaculo (90&deg;)
+                </button>
+            </div>
+        </div>
+        
+        <button id="parar" class="btn" onclick="sendInfo('stop')">
+            Parar
+        </button>
+        
+    </div>
+
+    <div id="Manual" class="tabcontent">
+        <h2>Comando manual</h2>
+        
+        <div class="row">
+        	<div class="column">
+            	<div>
+                    <h4>Servo 1</h4>
+                    <div>
+                        Posição: <span class="servoPos" id="servoPos1"></span>&deg;
+                    </div>
+                    <input type="range" min="0" max="90" class="slider" id="servoSlider1" onchange="servo(1,this.value)" value="45" />
+                </div>
+                
+                <div>
+                    <h4>Servo 2</h4>
+                    <div>
+                        Posição: <span class="servoPos" id="servoPos2"></span>&deg;
+                    </div>
+                    <input type="range" min="0" max="90" class="slider" id="servoSlider2" onchange="servo(2,this.value)" value="45" />
+                </div>
+                
+                <div>
+                    <h4>Servo 3</h4>
+                    <div>
+                        Posição: <span class="servoPos" id="servoPos3"></span>&deg;
+                    </div>
+                    <input type="range" min="0" max="90" class="slider" id="servoSlider3" onchange="servo(3,this.value)" value="45" />
+                </div>
+                
+                <div>
+                    <h4>Servo 4</h4>
+                    <div>
+                        Posição: <span class="servoPos" id="servoPos4"></span>&deg;
+                    </div>
+                    <input type="range" min="0" max="90" class="slider" id="servoSlider4" onchange="servo(4,this.value)" value="45" />
+                </div>
+            </div>
+        
+        	<div class="column">
+            	<div>
+                    <h4>Servo 5</h4>
+                    <div>
+                        Posição: <span class="servoPos" id="servoPos5"></span>&deg;
+                    </div>
+                    <input type="range" min="0" max="90" class="slider" id="servoSlider5" onchange="servo(5,this.value)" value="20" />
+                </div>
+                
+                <div>
+                    <h4>Servo 6</h4>
+                    <div>
+                        Posição: <span class="servoPos" id="servoPos6"></span>&deg;
+                    </div>
+                    <input type="range" min="0" max="90" class="slider" id="servoSlider6" onchange="servo(6,this.value)" value="20" />
+                </div>
+                
+                <div>
+                    <h4>Servo 7</h4>
+                    <div>
+                        Posição: <span class="servoPos" id="servoPos7"></span>&deg;
+                    </div>
+                    <input type="range" min="0" max="90" class="slider" id="servoSlider7" onchange="servo(7,this.value)" value="20" />
+                </div>
+                
+                <div>
+                    <h4>Servo 8</h4>
+                    <div>
+                        Posição: <span class="servoPos" id="servoPos8"></span>&deg;
+                    </div>
+                    <input type="range" min="0" max="90" class="slider" id="servoSlider8" onchange="servo(8,this.value)" value="20" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="Calibracao" class="tabcontent">
+        <h2>Calibração</h2>
+
+        <div>Ângulo a calibrar: </div>
+
+        <div class="row">
+            <div class="column">
+                <button id="btnMinCalib" class="btn" onclick="selectCalib(false)">
+                    Min = 0&deg;
+                </button>
+            </div>
+
+            <div class="column">
+                <button id="btnMaxCalib" class="btn" onclick="selectCalib(true)">
+                    Max = 90&deg;
+                </button>
+            </div>
+        </div><br><br>
+
+        <div class="row">
+        	<div class="column">
+            	<div> Servo 1 </div>
+                <div class="row">
+                  <div class="column">
+                    <button class="btn" onclick="sendInfo('c=1-')">
+                        -
+                    </button>
+                  </div>
+
+                  <div class="column">
+                    <button class="btn" onclick="sendInfo('c=1+')">
+                        +
+                    </button>
+                  </div>
+                </div>
+                
+                <div> Servo 2 </div>
+                <div class="row">
+                  <div class="column">
+                    <button class="btn" onclick="sendInfo('c=2-')">
+                        -
+                    </button>
+                  </div>
+
+                  <div class="column">
+                    <button class="btn" onclick="sendInfo('c=2+')">
+                        +
+                    </button>
+                  </div>
+                </div>
+                
+                <div> Servo 3 </div>
+                <div class="row">
+                  <div class="column">
+                    <button class="btn" onclick="sendInfo('c=3-')">
+                        -
+                    </button>
+                  </div>
+
+                  <div class="column">
+                    <button class="btn" onclick="sendInfo('c=3+')">
+                        +
+                    </button>
+                  </div>
+                </div>
+                
+                <div> Servo 4 </div>
+                <div class="row">
+                  <div class="column">
+                    <button class="btn" onclick="sendInfo('c=4-')">
+                        -
+                    </button>
+                  </div>
+
+                  <div class="column">
+                    <button class="btn" onclick="sendInfo('c=4+')">
+                        +
+                    </button>
+                  </div>
+                </div>
+                
+            </div>
+            
+            <div class="column">
+            	<div> Servo 5 </div>
+                <div class="row">
+                  <div class="column">
+                    <button class="btn" onclick="sendInfo('c=5-')">
+                        -
+                    </button>
+                  </div>
+
+                  <div class="column">
+                    <button class="btn" onclick="sendInfo('c=5+')">
+                        +
+                    </button>
+                  </div>
+                </div>
+                
+                <div> Servo 6 </div>
+                <div class="row">
+                  <div class="column">
+                    <button class="btn" onclick="sendInfo('c=6-')">
+                        -
+                    </button>
+                  </div>
+
+                  <div class="column">
+                    <button class="btn" onclick="sendInfo('c=6+')">
+                        +
+                    </button>
+                  </div>
+                </div>
+                
+                <div> Servo 7 </div>
+                <div class="row">
+                  <div class="column">
+                    <button class="btn" onclick="sendInfo('c=7-')">
+                        -
+                    </button>
+                  </div>
+
+                  <div class="column">
+                    <button class="btn" onclick="sendInfo('c=7+')">
+                        +
+                    </button>
+                  </div>
+                </div>
+                
+                <div> Servo 8 </div>
+                <div class="row">
+                  <div class="column">
+                    <button class="btn" onclick="sendInfo('c=8-')">
+                        -
+                    </button>
+                  </div>
+
+                  <div class="column">
+                    <button class="btn" onclick="sendInfo('c=8+')">
+                        +
+                    </button>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="Parametros" class="tabcontent">
+        <h2>Calibração de parâmetros</h2>
+
+      <div class="row"> 
+      
+        <div class="column">
+          <div class="row">
+            <div class="column">
+              <h3> Andar Count </h3>
+              <input type="number" class="ajuste" id="andar_count" name="andar_count" min=1 value=6>
+
+              <h3> Ajuste Esquerda </h3>
+              <input type="number" class="ajuste" id="ajuste_esq" name="ajuste_esq" value=0>
+            </div>
+          </div>
+        </div>
+        
+        <div class="column">
+          <div class="row">
+            <div class="column">
+              <h3> Rodar Count </h3>
+              <input type="number" class="ajuste" id="rodar_count" name="rodar_count" min = 1 value=4>
+
+              <h3> Ajuste Direita </h3>
+              <input type="number" class="ajuste" id="ajuste_dir" name="ajuste_dir" value=0>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <input type="submit" id ="submit" class="btn" onclick="submit_param()">
+
+      <h4>Velocidade de andar</h4>
+      <div>
+        Velocidade: <span class="servoPos"></span> ms
+      </div>
+      <input type="range" min="50" max="400" class="slider" id="velocidade" onchange="adjust_vel(this.value)" value="100" />
+        
+    </div>
+    
+    <script>
+        console.log("from script file");
+        $.ajaxSetup({timeout:1000});
+
+        function selectCalib(max) {
+            var btnMin = document.getElementById("btnMinCalib");
+            var btnMax = document.getElementById("btnMaxCalib");
+
+            if (max) {
+            	btnMax.disabled = true;
+                btnMin.disabled = false;
+                sendInfo('cMax');
+            } else {
+            	btnMax.disabled = false;
+                btnMin.disabled = true;
+                sendInfo('cMin');
+            }
+        }
+
+		function sendInfo(codigo) {
+         	$.get("/?" + codigo + "&");
+            {Connection: close}; 
+        }
+
+        function openPage(pageName, elmnt, color) {
+            var i, tabcontent, tablinks;
+
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].style.backgroundColor = "";
+            }
+
+            document.getElementById(pageName).style.display = "block";
+            elmnt.style.backgroundColor = color;
+            
+            document.getElementById("btnMinCalib").disabled = false;
+            document.getElementById("btnMaxCalib").disabled = false;
+
+            switch(pageName) {
+                case 'Comandos':
+                    sendInfo('com');
+                    break;
+                case 'Manual':
+                    sendInfo('man');
+                    break;
+                case 'Calibracao':
+                    sendInfo('cal');
+                    break;
+                case 'Parametros':
+                    sendInfo('par');
+            }
+        }
+        
+        function submit_param() {
+        	var andar_count = document.getElementById("andar_count").value;
+            var rodar_count = document.getElementById("rodar_count").value;
+            var ajuste_esquerda = document.getElementById("ajuste_esq").value;
+            var ajuste_direita = document.getElementById("ajuste_dir").value;
+            
+            sendInfo("p=" + andar_count + "/" + rodar_count + "/" + ajuste_esquerda + "/" + ajuste_direita);
+        }
+        
+        var sliders = document.getElementsByClassName("slider");
+        var servoPs = document.getElementsByClassName("servoPos");
+        for (i = 0; i < sliders.length; i++) {
+        	servoPs[i].innerHTML = sliders[i].value;
+            sliders[i].oninput = function() {
+            	var output = this.parentElement.getElementsByClassName("servoPos")[0];
+                output.innerHTML = this.value;
+            }
+        }
+        
+        function servo(servo, pos) {
+            sendInfo("value=" + pos + "/" + servo);
+        }
+
+        function adjust_vel(vel) {
+            sendInfo("v=" + vel);
+        }
+
+        document.getElementById("defaultOpen").click();
+    </script>
+</body>
+</html>
